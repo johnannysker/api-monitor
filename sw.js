@@ -7,7 +7,9 @@ self.addEventListener('install', (event) => {
                 '/styles.css',
                 '/app.js',
                 '/image/bee-192.png',
-                '/image/bee-512.png'
+                '/image/bee-512.png',
+                '/image/lixeira.png',
+                '/image/notificacao.png'
             ]);
         })
     );

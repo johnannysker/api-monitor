@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const alerta = daysSinceLast > 14 ? ' (Alerta: Inspeção atrasada)' : '';
             if (daysSinceLast > 14) {
                 alertasAtrasados.push({ colmeiaId: colmeia.id, days: daysSinceLast });
-                // Gerar notificação se não existir recente
                 if (!notificacoes.some(notif => notif.colmeiaId === colmeia.id && notif.mensagem.includes('atrasada'))) {
                     gerarNotificacao(colmeia.id, `Inspeção atrasada (${daysSinceLast} dias atrás)`);
                 }
@@ -61,14 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Localização: ${colmeia.loc}</p>
                 <p>Saúde: ${score}/100${alerta}</p>
                 <p>Última inspeção: ${daysSinceLast} dias atrás</p>
-                <button onclick="openInspecao(${index})">Inspecionar</button>
-                <button onclick="openRelatorio(${index})">Relatório</button>
-                <button class="delete-button" onclick="deleteColmeia(${index})">
-                    <!-- SVG de lixeira vermelha -->
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M3 4H13M6 7V11M10 7V11M4 4L5 12C5 12.5304 5.21071 13.0391 5.58579 13.4142C5.96086 13.7893 6.46957 14 7 14H9C9.53043 14 10.0391 13.7893 10.4142 13.4142C10.7893 13.0391 11 12.5304 11 12L12 4M3 4H13M5 4L5.5 3C5.66667 2.66667 6 2 7 2H9C10 2 10.3333 2.66667 10.5 3L11 4" stroke="red" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
+                <div class="card-buttons">
+                    <button onclick="openInspecao(${index})">Inspecionar</button>
+                    <button onclick="openRelatorio(${index})">Relatório</button>
+                    <button class="delete-button" onclick="deleteColmeia(${index})">
+                        <img src="image/lixeira.png" alt="Deletar">
+                    </button>
+                </div>
             `;
             list.appendChild(card);
         });
@@ -76,14 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const maisRecente = alertasAtrasados.sort((a, b) => b.days - a.days)[0];
             ultimoAlerta = `Colmeia ${maisRecente.colmeiaId}: Inspeção atrasada (${maisRecente.days} dias atrás)`;
         }
-        document.getElementById('ultimo-alerta').textContent = ultimoAlerta;
-        document.getElementById('alerta-sazonal').textContent = getAlertaSazonal();
+        document.getElementById('ultimo-alerta').textContent = `${ultimoAlerta} | Sazonal: ${getAlertaSazonal()}`;
     }
 
     function updateNotificacoes() {
         const list = document.getElementById('notificacoes-list');
         list.innerHTML = '';
-        // Ordenar por data reversa (mais recente primeiro)
         notificacoes.sort((a, b) => new Date(b.data) - new Date(a.data));
         notificacoes.forEach(notif => {
             const item = document.createElement('div');
