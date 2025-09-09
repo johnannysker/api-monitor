@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApiMonitor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+         <img src="image/bee-192.png" alt="Ícone ApiMonitor" class="header-icon">
+         <h1>ApiMonitor - Monitoramento de Colmeias</h1>
+        </div>
+    </header>
+    <main>
+        <section id="dashboard">
+            <h2>Dashboard</h2>
+            <div id="colmeias-list"></div>
+            <button id="add-colmeia">+ Nova Colmeia</button>
+            <div id="alerta-sazonal"></div>
+        </section>
+        <section id="form-colmeia" style="display: none;">
+            <h2>Cadastro de Colmeia</h2>
+            <form>
+                <label>ID/Nome: <input type="text" id="colmeia-id"></label>
+                <label>Localização: <input type="text" id="colmeia-loc"></label>
+                <label>Tipo de Abelha: <select id="colmeia-tipo">
+                    <option>Apis mellifera</option>
+                    <option>Outras</option>
+                </select></label>
+                <button type="button" id="save-colmeia">Salvar</button>
+                <button type="button" id="cancel-colmeia">Cancelar</button>
+            </form>
+        </section>
+        <section id="form-inspecao" style="display: none;">
+            <h2>Inspeção de Colmeia</h2>
+            <p id="inspecao-colmeia-name"></p>
+            <form>
+                <label>Rainha presente? <select id="rainha"><option value="true">Sim</option><option value="false">Não</option></select></label>
+                <label>Nível de Mel: <select id="mel"><option>Baixo</option><option>Médio</option><option>Alto</option></select></label>
+                <label>Pragas (Varroa, 1-5): <input type="number" id="pragas" min="1" max="5"></label>
+                <label>Notas: <textarea id="notas"></textarea></label>
+                <button type="button" id="save-inspecao">Salvar Inspeção</button>
+                <button type="button" id="cancel-inspecao">Cancelar</button>
+            </form>
+        </section>
+        <section id="relatorio" style="display: none;">
+            <h2>Relatório da Colmeia</h2>
+            <p id="relatorio-colmeia-name"></p>
+            <table id="relatorio-table">
+                <thead><tr><th>Data</th><th>Score</th><th>Notas</th></tr></thead>
+                <tbody></tbody>
+            </table>
+            <button id="export-csv">Exportar CSV</button>
+            <button id="back-dashboard">Voltar</button>
+        </section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>

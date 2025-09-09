@@ -1,0 +1,100 @@
+body { font-family: Arial, 
+    sans-serif; 
+    margin: 0; 
+    padding: 10px; 
+    background: #f4f4f4; 
+    color: #333; 
+}
+
+header { 
+    background: #4CAF50; 
+    color: white; 
+    padding: 10px; 
+    text-align: center; 
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.header-icon {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+main { 
+    max-width: 800px; 
+    margin: auto; 
+}
+
+section {
+     background: white; 
+     padding: 15px; 
+     margin: 10px 0; 
+     border-radius: 8px; 
+     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    }
+
+button { 
+    background: #4CAF50; 
+    color: white; 
+    border: none; 
+    padding: 8px 12px; 
+    margin: 5px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+}
+
+button:hover { 
+    background: #45a049; 
+}
+
+form label { 
+    display: block; 
+    margin: 10px 0; 
+}
+
+input, select, textarea { 
+    width: 100%; 
+    padding: 8px; 
+    box-sizing: border-box; 
+}
+
+#colmeias-list { 
+    display: flex; 
+    flex-wrap: wrap; 
+}
+
+.colmeia-card { 
+    background: #e8f5e9; 
+    padding: 10px; 
+    margin: 10px; 
+    border-radius: 8px; 
+    width: 200px; 
+    text-align: center; 
+}
+
+.alerta { 
+    color: red; 
+    font-weight: bold; 
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+}
+
+th, td { 
+    border: 1px solid #ddd; 
+    padding: 8px; 
+    text-align: left; 
+}
+
+th { 
+    background: #f2f2f2; 
+}
