@@ -1,5 +1,7 @@
-body { font-family: Arial, 
-    sans-serif; 
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+body { 
+    font-family: 'Poppins', sans-serif; 
     margin: 0; 
     padding: 10px; 
     background: #f4f4f4; 
@@ -13,18 +15,24 @@ header {
     text-align: center; 
 }
 
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+.header-content { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px; 
+    position: relative; 
 }
 
-.header-icon {
-    width: 32px;
-    height: 32px;
-    vertical-align: middle;
-    display: inline-block;
+.header-icon { 
+    width: 32px; 
+    height: 32px; 
+}
+
+.notificacoes-icon { 
+    cursor: pointer; 
+    position: absolute; 
+    right: 10px; 
+    top: 0; 
 }
 
 main { 
@@ -32,13 +40,13 @@ main {
     margin: auto; 
 }
 
-section {
-     background: white; 
-     padding: 15px; 
-     margin: 10px 0; 
-     border-radius: 8px; 
-     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-    }
+section { 
+    background: white; 
+    padding: 15px; 
+    margin: 10px 0; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
 
 button { 
     background: #4CAF50; 
@@ -65,9 +73,25 @@ input, select, textarea {
     box-sizing: border-box; 
 }
 
+.dashboard-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+#alertas-lembretes { 
+    margin-bottom: 10px; 
+    padding: 10px; 
+    background: #fff3cd; 
+    border: 1px solid #ffeeba; 
+    border-radius: 4px; 
+}
+
 #colmeias-list { 
     display: flex; 
     flex-wrap: wrap; 
+    gap: 10px; 
+    justify-content: center; 
 }
 
 .colmeia-card { 
@@ -75,8 +99,22 @@ input, select, textarea {
     padding: 10px; 
     margin: 10px; 
     border-radius: 8px; 
-    width: 200px; 
     text-align: center; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    flex: 1 1 calc(33% - 20px); 
+    max-width: calc(33% - 20px); 
+}
+
+.colmeia-card p { 
+    margin: 5px 0; 
+}
+
+.delete-button { 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    color: red; 
+    font-size: 16px; 
 }
 
 .alerta { 
@@ -90,11 +128,37 @@ table {
 }
 
 th, td { 
-    border: 1px solid #ddd; 
-    padding: 8px; 
-    text-align: left; 
-}
+    border: 1px solid #ddd;
+     padding: 8px; 
+     text-align: left; 
+    }
 
 th { 
-    background: #f2f2f2; 
+    background: #f2f2f2;
+ }
+
+#notificacoes-list { 
+    max-height: 300px; 
+    overflow-y: auto; 
+}
+
+.notificacao-item {
+     padding: 10px; 
+     border-bottom: 1px solid #ddd;
+     }
+
+
+/* Layout responsivo */
+@media (max-width: 1024px) {
+    .colmeia-card { 
+        flex: 1 1 calc(50% - 20px); 
+        max-width: calc(50% - 20px);
+     }
+}
+
+@media (max-width: 768px) {
+    .colmeia-card { 
+        flex: 1 1 100%; 
+        max-width: 100%;
+     }
 }

@@ -1,10 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
     const colmeias = JSON.parse(localStorage.getItem('colmeias')) || [];
+    const notificacoes = JSON.parse(localStorage.getItem('notificacoes')) || [];
     let currentColmeiaIndex = null;
 
     // Funções auxiliares
     function saveColmeias() {
         localStorage.setItem('colmeias', JSON.stringify(colmeias));
+    }
+
+    function saveNotificacoes() {
+        localStorage.setItem('notificacoes', JSON.stringify(notificacoes));
     }
 
     function calcularSaude(inspecao) {
@@ -18,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function getAlertaSazonal() {
         const mes = new Date().getMonth(); // 0-11
         const lembretes = [
-            "Janeiro: Verifique enxameação.", // Verão
+            "Janeiro: Verifique enxameação.",
             "Fevereiro: Controle de Varroa.",
             "Março: Monitore mel.",
             // Adicione para outros meses...
@@ -26,26 +31,66 @@ document.addEventListener('DOMContentLoaded', () => {
         return lembretes[mes] || "Nenhum alerta sazonal.";
     }
 
+    function gerarNotificacao(colmeiaId, mensagem) {
+        const data = new Date().toISOString().split('T')[0];
+        notificacoes.push({ data, colmeiaId, mensagem });
+        saveNotificacoes();
+    }
+
     function updateDashboard() {
         const list = document.getElementById('colmeias-list');
         list.innerHTML = '';
+        let ultimoAlerta = 'Nenhum alerta recente.';
+        const alertasAtrasados = [];
         colmeias.forEach((colmeia, index) => {
             const lastInspecao = colmeia.inspecoes[colmeia.inspecoes.length - 1];
             const score = lastInspecao ? calcularSaude(lastInspecao) : 'N/A';
             const daysSinceLast = lastInspecao ? Math.floor((Date.now() - new Date(lastInspecao.data)) / (1000 * 60 * 60 * 24)) : 'Nunca';
             const alerta = daysSinceLast > 14 ? ' (Alerta: Inspeção atrasada)' : '';
+            if (daysSinceLast > 14) {
+                alertasAtrasados.push({ colmeiaId: colmeia.id, days: daysSinceLast });
+                // Gerar notificação se não existir recente
+                if (!notificacoes.some(notif => notif.colmeiaId === colmeia.id && notif.mensagem.includes('atrasada'))) {
+                    gerarNotificacao(colmeia.id, `Inspeção atrasada (${daysSinceLast} dias atrás)`);
+                }
+            }
             const card = document.createElement('div');
             card.className = 'colmeia-card';
             card.innerHTML = `
                 <h3>${colmeia.id}</h3>
+                <p>Localização: ${colmeia.loc}</p>
                 <p>Saúde: ${score}/100${alerta}</p>
                 <p>Última inspeção: ${daysSinceLast} dias atrás</p>
                 <button onclick="openInspecao(${index})">Inspecionar</button>
                 <button onclick="openRelatorio(${index})">Relatório</button>
+                <button class="delete-button" onclick="deleteColmeia(${index})">
+                    <!-- SVG de lixeira vermelha -->
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 4H13M6 7V11M10 7V11M4 4L5 12C5 12.5304 5.21071 13.0391 5.58579 13.4142C5.96086 13.7893 6.46957 14 7 14H9C9.53043 14 10.0391 13.7893 10.4142 13.4142C10.7893 13.0391 11 12.5304 11 12L12 4M3 4H13M5 4L5.5 3C5.66667 2.66667 6 2 7 2H9C10 2 10.3333 2.66667 10.5 3L11 4" stroke="red" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
             `;
             list.appendChild(card);
         });
+        if (alertasAtrasados.length > 0) {
+            const maisRecente = alertasAtrasados.sort((a, b) => b.days - a.days)[0];
+            ultimoAlerta = `Colmeia ${maisRecente.colmeiaId}: Inspeção atrasada (${maisRecente.days} dias atrás)`;
+        }
+        document.getElementById('ultimo-alerta').textContent = ultimoAlerta;
         document.getElementById('alerta-sazonal').textContent = getAlertaSazonal();
+    }
+
+    function updateNotificacoes() {
+        const list = document.getElementById('notificacoes-list');
+        list.innerHTML = '';
+        // Ordenar por data reversa (mais recente primeiro)
+        notificacoes.sort((a, b) => new Date(b.data) - new Date(a.data));
+        notificacoes.forEach(notif => {
+            const item = document.createElement('div');
+            item.className = 'notificacao-item';
+            item.textContent = `${notif.data}: ${notif.mensagem} (Colmeia ${notif.colmeiaId})`;
+            list.appendChild(item);
+        });
     }
 
     // Eventos
@@ -130,6 +175,26 @@ document.addEventListener('DOMContentLoaded', () => {
         a.href = url;
         a.download = `${colmeias[currentColmeiaIndex].id}_relatorio.csv`;
         a.click();
+    });
+
+    window.deleteColmeia = (index) => {
+        const colmeia = colmeias[index];
+        if (confirm(`Tem certeza que quer excluir a colmeia ${colmeia.id}?`)) {
+            colmeias.splice(index, 1);
+            saveColmeias();
+            updateDashboard();
+        }
+    };
+
+    document.getElementById('notificacoes-icon').addEventListener('click', () => {
+        updateNotificacoes();
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('notificacoes').style.display = 'block';
+    });
+
+    document.getElementById('back-dashboard-notificacoes').addEventListener('click', () => {
+        document.getElementById('notificacoes').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
     });
 
     // Inicializar
